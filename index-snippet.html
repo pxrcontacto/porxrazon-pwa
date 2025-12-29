@@ -1,0 +1,44 @@
+<!-- PORXRAZON PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7b2cff">
+
+<style>
+.pxr-install{display:none;margin:20px auto;text-align:center}
+.pxr-btn{
+ padding:14px 34px;border-radius:40px;
+ font-weight:600;border:none;cursor:pointer;
+ background:linear-gradient(135deg,#7b2cff,#a855f7);
+ color:#fff;margin:8px;
+}
+</style>
+
+<div class="pxr-install">
+<button id="pwaBtn" class="pxr-btn">Instalar app</button>
+<p id="iosHelp" style="display:none">
+En iPhone: usa Compartir → Añadir a pantalla de inicio
+</p>
+</div>
+
+<script>
+const ua=navigator.userAgent;
+const isiOS=/iPhone|iPad|iPod/i.test(ua);
+const isStandalone=window.matchMedia('(display-mode: standalone)').matches;
+const box=document.querySelector('.pxr-install');
+const iosHelp=document.getElementById('iosHelp');
+
+if(!isStandalone) box.style.display="block";
+if(isiOS) iosHelp.style.display="block";
+
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt",e=>{
+ e.preventDefault();
+ deferredPrompt=e;
+ document.getElementById("pwaBtn").onclick=()=>{
+   deferredPrompt.prompt();
+ };
+});
+
+if('serviceWorker'in navigator){
+ navigator.serviceWorker.register('sw.js');
+}
+</script>
